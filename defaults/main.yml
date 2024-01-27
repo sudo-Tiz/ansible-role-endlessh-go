@@ -36,9 +36,7 @@ endlessh_container_additional_networks: []
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2112"), or empty string to not expose.
 endlessh_container_http_host_bind_port: ""
 
-# The ports endlessh will use for http/ssh inside the container
-endlessh_container_http_port: "2112"
-endlessh_container_ssh_port: "2222"
+
 
 endlessh_container_labels_metrics_middleware_basic_auth_enabled: false
 # See: https://doc.traefik.io/traefik/middlewares/http/basicauth/#users
@@ -93,30 +91,25 @@ endlessh_container_labels_traefik_additional_response_headers_custom: {}
 # Storage locations in container
 endlessh_container_common_path_prefix: "/endlessh"
 
+endlessh_config:
+  intervalMs: 1000
+  bannerMaxLength: 32
+  maxClients: 4096
+  connType: "tcp"
+  sshHost: "0.0.0.0"
+  sshPorts: 
+    - [2222, 2222]
+  prometheusEnabled: false
+  prometheusHost: "0.0.0.0"
+  prometheusPort: 2112
+  prometheusEntry: "metrics"
+  prometheusCleanUnseenSeconds: 0
+  geoipSupplier: "off"
+  maxMindDbFileName: ""
 
-# Default blackbox exporter configuration template which covers the generic use case.
-# You can customize it by controlling the various variables inside it.
-#
-# For a more advanced customization, you can extend the default (see `endlessh_configuration_extension_yaml`)
-# or completely replace this variable with your own template.
-endlessh_configuration_yaml: "{{ lookup('template', 'templates/config.yml.j2') }}"
 
-endlessh_configuration_extension_yaml: |
-  # Your custom YAML configuration for blackbox exporter goes here.
-  # This configuration extends the default starting configuration (`endlessh_configuration_yaml`).
-  #
-  # You can override individual variables from the default configuration, or introduce new ones.
-  #
-  # If you need something more special, you can take full control by
-  # completely redefining `endlessh_configuration_yaml`.
 
-endlessh_configuration_extension: "{{ endlessh_configuration_extension_yaml | from_yaml if endlessh_configuration_extension_yaml | from_yaml is mapping else {} }}"
-
-# Holds the final borgmatic configuration (a combination of the default and its extension).
-# You most likely don't need to touch this variable. Instead, see `endlessh_configuration_yaml`.
-endlessh_configuration: "{{ endlessh_configuration_yaml | from_yaml | combine(endlessh_configuration_extension, recursive=True) }}"
-
-# Additional environment variables to pass to the endlessh container.
+  # Additional environment variables to pass to the endlessh container.
 # You can use this to further influence the default configuration.
 #
 # Example:

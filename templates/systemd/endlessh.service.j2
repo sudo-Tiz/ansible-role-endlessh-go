@@ -22,6 +22,9 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
                 {% if endlessh_container_http_host_bind_port %}
                 -p {{ endlessh_container_http_host_bind_port }}:{{ endlessh_container_http_port }} \
                 {% endif %}
+                {% for ports in endlessh_config.sshPorts %}
+                -p {{ ports[0] }}:{{ ports[1] }}
+                {% endfor %}
                 --label-file={{ endlessh_base_path }}/labels \
                 {{ endlessh_container_image }}
 

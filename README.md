@@ -22,27 +22,21 @@ To enable this service, add the following configuration to your `vars.yml` file 
 
 endlessh_enabled: true
 
-# config
-intervalMs: 1000
-bannerMaxLength: 32
-maxClients: 4096
-connType: "tcp"
-connHost: "0.0.0.0"
-connPorts: []
-prometheusEnabled: false
-prometheusHost: "0.0.0.0"
-prometheusPort: "2112"
-prometheusEntry: "metrics"
-prometheusCleanUnseenSeconds: 0
-geoipSupplier: "off"
-maxMindDbFileName: ""
-
 ########################################################################
 #                                                                      #
 # /endlessh                                                                #
 #                                                                      #
 ########################################################################
 ```
+You can overwrite the default config variable using ``endlessh_config`` variable.  
+Here is an exemple to use ssh port 22 on host and 2222 on container
+
+```yaml
+endlessh_config:
+  sshPorts: 
+  - [22, 2222]
+```
+See the full list of options in the [default/main.yml](default/main.yml) file
 
 ### Exposing the web interface
 
